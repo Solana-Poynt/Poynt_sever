@@ -6,11 +6,6 @@ export default class UserRepository {
     return users as any;
   }
 
-  async findUsersByRole(role: string): Promise<IUser[] | null> {
-    const users = await User.find({ role: role });
-    return users as any;
-  }
-
   async findOneUser(id: string): Promise<IUser | null> {
     const user: any = await User.findOne({ _id: id })
       .lean()
@@ -19,10 +14,9 @@ export default class UserRepository {
   }
 
   async findUserById(userId: string): Promise<IUser | null> {
-    const user: any = await User.findById(userId)
-      .select("-password -isEmailVerified")
-      .populate("members")
-      .populate("organizations");
+    const user: any = await User.findById(userId).select(
+      "-password -isEmailVerified"
+    );
     return user as IUser;
   }
 
@@ -72,48 +66,6 @@ export default class UserRepository {
 
   async deleteUser(userId: string): Promise<IUser> {
     const user: any = await User.findByIdAndDelete({ _id: userId });
-    return user as IUser;
-  }
-
-  async removeMember(userId: string, memberId: string): Promise<IUser> {
-    const user: any = await User.findOneAndUpdate(
-      { _id: userId },
-      { $pull: { members: memberId } },
-      { new: true }
-    );
-    return user as IUser;
-  }
-
-  async addMember(userId: string, memberId: string): Promise<IUser> {
-    const user: any = await User.findOneAndUpdate(
-      { _id: userId },
-      { $push: { members: memberId } },
-      { new: true }
-    );
-    return user as IUser;
-  }
-
-  async removeOrganization(
-    userId: string,
-    organizationId: string
-  ): Promise<IUser> {
-    const user: any = await User.findOneAndUpdate(
-      { _id: userId },
-      { $pull: { organizations: organizationId } },
-      { new: true }
-    );
-    return user as IUser;
-  }
-
-  async addOrganization(
-    userId: string,
-    organizationId: string
-  ): Promise<IUser> {
-    const user: any = await User.findOneAndUpdate(
-      { _id: userId },
-      { $push: { organizations: organizationId } },
-      { new: true }
-    );
     return user as IUser;
   }
 }
