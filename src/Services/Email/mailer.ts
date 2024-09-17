@@ -72,7 +72,7 @@ export class MalierService {
   async sendOTP(options: Mail) {
     if (options.otp !== undefined && options.otp.toString().length === 6) {
       const message = `<p>Hello,</p>
-      <p>Welcome to VOTA. Please verify your 
+      <p>Welcome to POYNT. Please verify your 
       email address with the OTP code below. It would expire after 10mins.<p>
       <p>OTP: <b>${options.otp}</b></p>`;
       const result = await this.sendMail(options, message);
@@ -81,7 +81,7 @@ export class MalierService {
   }
 
   async accountActivationMail(options: Mail) {
-    const message = `<p>Welcome to VOTA,
+    const message = `<p>Welcome to POYNT,
     your account have been activated. Kindly login to continue<p>`;
     const result = await this.sendMail(options, message);
     return result;
@@ -96,7 +96,7 @@ export class MalierService {
        <p>If you didn't request this, please ignore this email.
         </p>
         Thanks,  <br> 
-        Team VOTA <p/>`;
+        Team POYNT <p/>`;
       const result = await this.sendMail(options, message);
       return result;
     }
@@ -107,7 +107,7 @@ export class MalierService {
     Hi, <br> 
     You have successfully reset your password.
       <br> 
-    Team VOTA <p/>`;
+    Team POYNT <p/>`;
     const result = await this.sendMail(options, message);
     return result;
   }
