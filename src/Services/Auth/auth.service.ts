@@ -140,6 +140,33 @@ export default class AuthService {
     }
   }
 
+  public async validateOTP(
+    req: Request,
+    next: NextFunction
+  ): Promise<IUser | void> {
+    const { OTP, email } = req.body;
+    const user = await userRepository.findUserByCodeAndEmail(
+      email,
+      OTP as number | string
+    );
+    const otpExpiresAt = Date.parse(user?.otpExpiresAt as unknown as string);
+
+    if (otpExpiresAt !== undefined && Date.now() > otpExpiresAt) {
+      return next(
+        new AppError("Invalid OTP or OTP has expired", statusCode.badRequest())
+      );
+    }
+    if (user === null) {
+      return next(
+        new AppError("Resource for user not found", statusCode.notFound())
+      );
+    }
+    if (user.OTP !== OTP) {
+      return next(new AppError("Invalid otp", statusCode.unauthorized()));
+    }
+    return user;
+  }
+
   public async resendOTP(
     req: Request,
     next: NextFunction
@@ -181,15 +208,15 @@ export default class AuthService {
         )
       );
     }
-    const isActive = await userRepository.isVerified(email);
-    if (!isActive) {
-      return next(
-        new AppError(
-          "User account is not active, Kindly activate account",
-          statusCode.unauthorized()
-        )
-      );
-    }
+    // const isActive = await userRepository.isVerified(email);
+    // if (!isActive) {
+    //   return next(
+    //     new AppError(
+    //       "User account is not active, Kindly activate account",
+    //       statusCode.unauthorized()
+    //     )
+    //   );
+    // }
     // if user is active then proceed to further operations
     const hashedPassword = await util.comparePassword(password, user.password);
     if (hashedPassword) {

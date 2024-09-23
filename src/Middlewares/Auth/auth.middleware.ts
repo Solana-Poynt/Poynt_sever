@@ -34,6 +34,15 @@ export const otpValidationRules = () => {
   ];
 };
 
+export const otpRules = () => {
+  return [
+    body("OTP")
+      .trim()
+      .isLength({ min: 4, max: 4 })
+      .withMessage("OTP code must be 4 digit long"),
+  ];
+};
+
 export const emailValidationRules = () => {
   return [
     body("email").trim().isEmail().withMessage("please enter a valid email"),

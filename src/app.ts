@@ -43,13 +43,13 @@ const address = `0.0.0.0:${PORT}`;
 app.use(helmet());
 
 app.options("*", cors());
-
-app.use(
-  cors({
-    origin: [CLIENT_URL, LOCAL_URL],
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  })
-);
+// app.use(
+//   cors({
+//     origin: [CLIENT_URL, LOCAL_URL],
+//     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+//   })
+// );
+app.use(cors({ origin: "*" }));
 
 // Body parser middleware
 // body parser, reading data from body into req.body

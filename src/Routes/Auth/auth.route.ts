@@ -6,11 +6,13 @@ import {
   loginValidationRules,
   refreshTokenValidationRules,
   resetPasswordValidationRules,
+  otpRules,
 } from "../../Middlewares/Auth/auth.middleware";
 
 import {
   signUp,
   activateUserAccount,
+  validateOTP,
   resendOTP,
   login,
   refreshToken,
@@ -30,6 +32,7 @@ router.post(
   validate,
   activateUserAccount
 );
+router.post("/validateOTP", otpRules(), validate, validateOTP);
 router.post("/resendOTP", emailValidationRules(), validate, resendOTP);
 router.post("/login", loginValidationRules(), validate, login);
 router.get(

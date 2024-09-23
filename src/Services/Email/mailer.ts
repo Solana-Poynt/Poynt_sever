@@ -70,7 +70,7 @@ export class MalierService {
   }
 
   async sendOTP(options: Mail) {
-    if (options.otp !== undefined && options.otp.toString().length === 6) {
+    if (options.otp !== undefined && options.otp.toString().length === 4) {
       const message = `<p>Hello,</p>
       <p>Welcome to POYNT. Please verify your 
       email address with the OTP code below. It would expire after 10mins.<p>
@@ -88,7 +88,7 @@ export class MalierService {
   }
 
   async forgotPasswordMail(options: Mail) {
-    if (options.otp !== undefined && options.otp.toString().length === 6) {
+    if (options.otp !== undefined && options.otp.toString().length === 4) {
       const message = `<p>Hi, <br> 
         <p>We received a request to reset your password, to reset your password use the code below and follow the instructions.<br> 
         <b>Code: ${options.otp}</b><br>

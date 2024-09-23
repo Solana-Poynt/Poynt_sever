@@ -76,6 +76,30 @@ export const activateUserAccount = async (
   }
 };
 
+export const validateOTP = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const result = await authService.validateOTP(req, next);
+    if (result) {
+      return res.status(statusCode.accepted()).json({
+        success: true,
+        message: "Successful, OTP valid",
+        data: result,
+      });
+    }
+  } catch (err) {
+    return next(
+      new AppError(
+        `something went wrong here is the error ${err}`,
+        statusCode.internalServerError()
+      )
+    );
+  }
+};
+
 export const resendOTP = async (
   req: Request,
   res: Response,
