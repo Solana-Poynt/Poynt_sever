@@ -49,10 +49,10 @@ export default class AuthService {
           subject: "Verify your POYNT Account",
           otp: data.OTP,
         };
-        const sentMail = await mail.sendOTP(userInfo);
-        if (sentMail) {
-          return newUser as IUser;
-        }
+        // const sentMail = await mail.sendOTP(userInfo);
+        // if (sentMail) {
+        //   return newUser as IUser;
+        // }
         return newUser as IUser;
       }
     }
