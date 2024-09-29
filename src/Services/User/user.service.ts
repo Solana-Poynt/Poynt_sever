@@ -11,7 +11,7 @@ const userRepository = new UserRepository();
 const util = new Utilities();
 const mail = new MalierService();
 
-export default class AuthService {
+export default class UserService {
   public async makeReview(
     req: any,
     next: NextFunction
