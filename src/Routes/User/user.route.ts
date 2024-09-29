@@ -14,7 +14,7 @@ import authenticate from "../../Middlewares/verifyToken.middleware";
 
 const router = Router();
 
-router.get("/:id", validate, authenticate, getUser);
+router.get("/", validate, authenticate, getUser);
 router.post(
   "/makeReview",
   reviewValidationRules(),

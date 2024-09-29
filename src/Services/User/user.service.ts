@@ -13,7 +13,7 @@ const mail = new MalierService();
 
 export default class UserService {
   public async getUser(req: any, next: NextFunction): Promise<IReview | void> {
-    const { id } = req.params;
+    const { id } = req.user;
     const user = await userRepository.findUserById(id);
     if (!user) {
       return next(
