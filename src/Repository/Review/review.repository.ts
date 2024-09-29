@@ -11,9 +11,9 @@ export default class ReviewRepository {
     return reviews as any;
   }
 
-  async getReviews(location: string): Promise<IReview[] | null> {
+  async getReviews(locationName: string): Promise<IReview[] | null> {
     const reviews = await Review.find({
-      "locationReviewed.locationName": location,
+      "locationReviewed.locationName": new RegExp(locationName, "i"),
     }).populate("reviewer");
     return reviews as any;
   }
