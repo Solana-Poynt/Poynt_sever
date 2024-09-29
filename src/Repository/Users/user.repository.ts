@@ -29,9 +29,30 @@ export default class UserRepository {
     return result;
   }
 
+  async findUserByReferralId(referralId: string): Promise<IUser | null> {
+    const result: any = await User.findOne({
+      referralId: referralId,
+    })
+      .select("+password")
+      .exec();
+    return result;
+  }
+
   async findUserByIdAndUpdate(
     id: string,
     payload: IUser
+  ): Promise<IUser | null> {
+    const user: any = await User.findByIdAndUpdate({ _id: id }, payload, {
+      new: true,
+    })
+      .select("-password -OTP -__v")
+      .exec();
+    return user as IUser;
+  }
+
+  async updateUserReferrals(
+    id: string,
+    payload: Partial<IUser>
   ): Promise<IUser | null> {
     const user: any = await User.findByIdAndUpdate({ _id: id }, payload, {
       new: true,

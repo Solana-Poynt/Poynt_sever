@@ -17,7 +17,7 @@ export default class AuthService {
   private client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
   public async signUp(req: any, next: NextFunction): Promise<IUser | void> {
-    const { name, password, email, confirmPassword } = req.body;
+    const { name, password, email, confirmPassword, referralId } = req.body;
     if (password !== confirmPassword) {
       return next(
         new AppError("password do not match", statusCode.badRequest())
@@ -34,6 +34,7 @@ export default class AuthService {
         password: hashPassword,
         OTP,
         otpExpiresAt,
+        referralId: String(util.generateRandomCode(6, true)),
       };
 
       const data = await authRepository.signUp(user);
@@ -53,6 +54,24 @@ export default class AuthService {
         // if (sentMail) {
         //   return newUser as IUser;
         // }
+
+        //HANDLE REFERRAL LOGIC
+        if (referralId) {
+          const referralUser = await userRepository.findUserByReferralId(
+            referralId
+          );
+          if (referralUser) {
+            const userId = referralUser && String(referralUser?.id);
+            const referralCount =
+              referralUser?.referrals && referralUser?.referrals + 1;
+            await userRepository.updateUserReferrals(userId, {
+              referrals: referralCount,
+            });
+          }
+          return next(
+            new AppError("Invalid referrral ID", statusCode.badRequest())
+          );
+        }
         return newUser as IUser;
       }
     }

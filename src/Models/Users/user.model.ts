@@ -1,15 +1,26 @@
 import mongoose, { Schema, ObjectId } from "mongoose";
 
-export interface IUser {
+export interface IUser extends ILocation {
   id?: string;
   password: string;
   email: string;
   name?: string;
+  referralId?: string;
+  referrals?: number;
+  savedLocations?: ILocation[];
+  recentSearchs?: string[];
+  poynts?: number;
+  tier?: number;
   googleId?: string;
   OTP?: number | string;
   otpExpiresAt?: number;
   isEmailVerified?: boolean;
   createdAt?: string;
+}
+
+export interface ILocation {
+  locationName?: string;
+  meridian?: string;
 }
 
 const userSchema = new mongoose.Schema({
@@ -31,6 +42,28 @@ const userSchema = new mongoose.Schema({
   googleId: {
     type: String,
   },
+  poynts: {
+    type: Number,
+    default: 0.0,
+  },
+  tier: {
+    type: Number,
+    default: 0,
+  },
+  referrals: {
+    type: Number,
+    default: 0,
+  },
+  referralId: {
+    type: String,
+  },
+  savedLocations: [
+    {
+      locationName: String,
+      meridian: String,
+    },
+  ],
+  recentSearchs: [String],
   OTP: {
     type: String,
   },

@@ -21,6 +21,11 @@ export const signUpValidationRules = () => {
         "Password must be between min of 6 and max of 16 characters"
       ),
     body("email").trim().isEmail().withMessage("please enter a valid Email"),
+    body("referralId")
+      .trim()
+      .optional()
+      .notEmpty()
+      .withMessage("Referral can not be empty"),
   ];
 };
 
