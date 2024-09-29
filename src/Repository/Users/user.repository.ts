@@ -15,7 +15,7 @@ export default class UserRepository {
 
   async findUserById(userId: string): Promise<IUser | null> {
     const user: any = await User.findById(userId).select(
-      "-password -isEmailVerified"
+      "-password -isEmailVerified -OTP -__v"
     );
     return user as IUser;
   }

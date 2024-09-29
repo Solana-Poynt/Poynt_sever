@@ -12,6 +12,17 @@ const util = new Utilities();
 const mail = new MalierService();
 
 export default class UserService {
+  public async getUser(req: any, next: NextFunction): Promise<IReview | void> {
+    const { id } = req.params;
+    const user = await userRepository.findUserById(id);
+    if (!user) {
+      return next(
+        new AppError("Unable to get user", statusCode.internalServerError())
+      );
+    }
+    return user;
+  }
+
   public async makeReview(
     req: any,
     next: NextFunction
@@ -28,7 +39,21 @@ export default class UserService {
     };
     const review = await reviewRepository.makeReview(payload);
     if (!review) {
-      return next(new AppError("Unable to make review", statusCode.conflict()));
+      return next(
+        new AppError("Unable to make review", statusCode.internalServerError())
+      );
+    }
+    return review;
+  }
+
+  public async getReviews(
+    req: any,
+    next: NextFunction
+  ): Promise<IReview[] | void> {
+    const { location } = req.body;
+    const review = await reviewRepository.getReviews(location.locationName);
+    if (!review) {
+      return next(new AppError("Unable to get review", statusCode.conflict()));
     }
     return review;
   }

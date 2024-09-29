@@ -7,21 +7,29 @@ export default class ReviewRepository {
   }
 
   async findReview(): Promise<IReview[] | null> {
-    const reviews = await Review.find();
+    const reviews = await Review.find().populate("reviewer");
+    return reviews as any;
+  }
+
+  async getReviews(location: string): Promise<IReview[] | null> {
+    const reviews = await Review.find({
+      "locationReviewed.locationName": location,
+    }).populate("reviewer");
     return reviews as any;
   }
 
   async findOneReview(id: string): Promise<IReview | null> {
     const review: any = await Review.findOne({ _id: id })
+      .populate("reviewer")
       .lean()
       .select("-OTP -__v");
     return review as IReview;
   }
 
   async findUReviewById(reviewId: string): Promise<IReview | null> {
-    const review: any = await Review.findById(reviewId).select(
-      "-password -isEmailVerified"
-    );
+    const review: any = await Review.findById(reviewId)
+      .populate("reviewer")
+      .select("-password -isEmailVerified");
     return review as IReview;
   }
 
