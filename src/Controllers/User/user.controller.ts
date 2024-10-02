@@ -29,6 +29,30 @@ export const getUser = async (
   }
 };
 
+export const fundPoynt = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = await userService.fundPoynt(req, next);
+    if (user) {
+      return res.status(statusCode.created()).json({
+        success: true,
+        message: "Payment successful",
+        data: user,
+      });
+    }
+  } catch (err) {
+    return next(
+      new AppError(
+        `something went wrong ${err}`,
+        statusCode.internalServerError()
+      )
+    );
+  }
+};
+
 export const makeReview = async (
   req: Request,
   res: Response,

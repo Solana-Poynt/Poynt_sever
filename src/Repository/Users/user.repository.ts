@@ -50,6 +50,18 @@ export default class UserRepository {
     return user as IUser;
   }
 
+  async updateUserPoynts(
+    id: string,
+    payload: Partial<IUser>
+  ): Promise<IUser | null> {
+    const user: any = await User.findByIdAndUpdate({ _id: id }, payload, {
+      new: true,
+    })
+      .select("-password -OTP -__v")
+      .exec();
+    return user as IUser;
+  }
+
   async updateUserReferrals(
     id: string,
     payload: Partial<IUser>

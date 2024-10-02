@@ -21,3 +21,15 @@ export const saveLocationValidationRules = () => {
     body("location").trim().notEmpty().withMessage("Location can not be empty"),
   ];
 };
+export const fundPoyntValidationRules = () => {
+  return [
+    body("driverId")
+      .trim()
+      .notEmpty()
+      .withMessage("Driver ID can not be empty"),
+    body("poyntValue")
+      .trim()
+      .notEmpty()
+      .withMessage("Poynt Value can not be empty"),
+  ];
+};

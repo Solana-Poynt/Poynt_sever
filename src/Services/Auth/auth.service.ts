@@ -17,7 +17,8 @@ export default class AuthService {
   private client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
   public async signUp(req: any, next: NextFunction): Promise<IUser | void> {
-    const { name, password, email, confirmPassword, referralId } = req.body;
+    const { name, password, email, confirmPassword, referralId, role } =
+      req.body;
     if (password !== confirmPassword) {
       return next(
         new AppError("password do not match", statusCode.badRequest())
@@ -34,6 +35,7 @@ export default class AuthService {
         password: hashPassword,
         OTP,
         otpExpiresAt,
+        role,
         referralId: String(util.generateRandomCode(6, true)),
       };
 

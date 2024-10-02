@@ -5,6 +5,7 @@ import UserRepository from "../../Repository/Users/user.repository";
 import { IReview } from "../../Models/Reviews/review.model";
 import Utilities, { statusCode } from "../../Utilities/utils";
 import { MalierService } from "../Email/mailer";
+import { IUser } from "../../Models/Users/user.model";
 
 const reviewRepository = new ReviewRepository();
 const userRepository = new UserRepository();
@@ -18,6 +19,27 @@ export default class UserService {
     if (!user) {
       return next(
         new AppError("Unable to get user", statusCode.internalServerError())
+      );
+    }
+    return user;
+  }
+
+  public async fundPoynt(req: any, next: NextFunction): Promise<IUser | void> {
+    const { driverId, poyntValue } = req.body;
+    const driversData = await userRepository.findUserById(driverId);
+    if (!driversData) {
+      return next(
+        new AppError("Driver does not exist", statusCode.internalServerError())
+      );
+    }
+    const payload: Partial<IUser> = {
+      poynts:
+        driversData?.poynts && Number(driversData?.poynts) + Number(poyntValue),
+    };
+    const user = await userRepository.updateUserPoynts(driverId, payload);
+    if (!user) {
+      return next(
+        new AppError("Unable to make payment", statusCode.internalServerError())
       );
     }
     return user;

@@ -7,6 +7,7 @@ export interface IUser extends ILocation {
   name?: string;
   referralId?: string;
   referrals?: number;
+  role?: string;
   savedLocations?: ILocation[];
   recentSearchs?: string[];
   poynts?: number;
@@ -53,6 +54,10 @@ const userSchema = new mongoose.Schema({
   referrals: {
     type: Number,
     default: 0,
+  },
+  role: {
+    type: String,
+    default: "user",
   },
   referralId: {
     type: String,
