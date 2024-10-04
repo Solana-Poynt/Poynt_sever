@@ -6,6 +6,7 @@ import { IReview } from "../../Models/Reviews/review.model";
 import Utilities, { statusCode } from "../../Utilities/utils";
 import { MalierService } from "../Email/mailer";
 import { IUser } from "../../Models/Users/user.model";
+import { log } from "console";
 
 const reviewRepository = new ReviewRepository();
 const userRepository = new UserRepository();
@@ -32,10 +33,12 @@ export default class UserService {
         new AppError("Driver does not exist", statusCode.internalServerError())
       );
     }
+    console.log(driversData, poyntValue);
     const payload: Partial<IUser> = {
-      poynts:
-        driversData?.poynts && Number(driversData?.poynts) + Number(poyntValue),
+      poynts: Number(driversData?.poynts) + Number(poyntValue),
     };
+    console.log(payload);
+
     const user = await userRepository.updateUserPoynts(driverId, payload);
     if (!user) {
       return next(
