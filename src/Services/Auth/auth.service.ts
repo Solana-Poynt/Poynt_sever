@@ -83,40 +83,35 @@ export default class AuthService {
   }
 
   public async googleAuth(req: Request, next: NextFunction) {
-    const { token } = req.body;
-    const credentials = {
-      idToken: token,
-      audience: this.googleClientId,
-    };
+    const { name, idToken, email, role } = req.body;
 
     return (async () => {
       let newUser;
       const password = "undefined";
       const hashPassword = await util.generateHash(password);
-      const ticket = await this.client.verifyIdToken(credentials);
-      const payload = ticket.getPayload();
-      if (payload) {
-        const user: any = {
-          name: `${payload.family_name}  ${payload.given_name}`,
-          email: payload.email,
-          password: hashPassword,
-          googleId: payload.sub,
-        };
-        const userExist = await userRepository.findUserByEmail(user.email);
-        if (!userExist) {
-          newUser = await authRepository.signUp(user);
-          // await authRepository.updateUserIsVerifiedColumn(user.email);
-          const { accessToken, refreshToken } = await util.generateToken(
-            newUser.email
-          );
-          return { accessToken, refreshToken, newUser };
-        } else if (userExist) {
-          newUser = await userRepository.findUserByEmail(userExist.email);
-          const { accessToken, refreshToken } = await util.generateToken(
-            userExist.email
-          );
-          return { accessToken, refreshToken, newUser };
-        }
+      if (!idToken) {
+        return next(new AppError("No Id Found", statusCode.badRequest()));
+      }
+      const userExist = await userRepository.findUserByEmail(email);
+      const user: IUser = {
+        name,
+        email,
+        password: hashPassword,
+        role,
+      };
+
+      if (!userExist) {
+        newUser = await authRepository.signUp(user);
+        const { accessToken, refreshToken } = await util.generateToken(
+          newUser.email
+        );
+        return { accessToken, refreshToken, newUser };
+      } else if (userExist) {
+        newUser = await userRepository.findUserByEmail(userExist.email);
+        const { accessToken, refreshToken } = await util.generateToken(
+          userExist.email
+        );
+        return { accessToken, refreshToken, newUser };
       }
     })();
   }
@@ -358,3 +353,40 @@ export default class AuthService {
     return resetUser;
   }
 }
+
+// Your code // const { token } = req.body;
+// const credentials = {
+//   idToken: token,
+//   audience: this.googleClientId,
+// };
+
+// return (async () => {
+//   let newUser;
+//   const password = "undefined";
+//   const hashPassword = await util.generateHash(password);
+//   const ticket = await this.client.verifyIdToken(credentials);
+//   const payload = ticket.getPayload();
+//   if (payload) {
+//     const user: any = {
+//       name: `${payload.family_name}  ${payload.given_name}`,
+//       email: payload.email,
+//       password: hashPassword,
+//       googleId: payload.sub,
+//     };
+//     const userExist = await userRepository.findUserByEmail(user.email);
+//     if (!userExist) {
+//       newUser = await authRepository.signUp(user);
+//       // await authRepository.updateUserIsVerifiedColumn(user.email);
+//       const { accessToken, refreshToken } = await util.generateToken(
+//         newUser.email
+//       );
+//       return { accessToken, refreshToken, newUser };
+//     } else if (userExist) {
+//       newUser = await userRepository.findUserByEmail(userExist.email);
+//       const { accessToken, refreshToken } = await util.generateToken(
+//         userExist.email
+//       );
+//       return { accessToken, refreshToken, newUser };
+//     }
+//   }
+// })();
