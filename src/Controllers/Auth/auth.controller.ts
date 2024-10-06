@@ -42,6 +42,7 @@ export const googleAuth = async (
         message: "User successfully logged in.",
         accessToken: user.accessToken,
         refreshToken: user.refreshToken,
+        data: user.newUser,
       });
     } else {
       throw new Error("User authentication failed");
