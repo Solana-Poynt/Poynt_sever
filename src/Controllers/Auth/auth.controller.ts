@@ -39,13 +39,17 @@ export const googleAuth = async (
     if (user) {
       return res.status(statusCode.created()).json({
         status: "success",
-        message: "User successfully login.",
+        message: "User successfully logged in.",
+        accessToken: user.accessToken,
+        refreshToken: user.refreshToken,
       });
+    } else {
+      throw new Error("User authentication failed");
     }
-  } catch (err) {
+  } catch (err: any) {
     return next(
       new AppError(
-        `something went wrong here is the error`,
+        err.message || "An error occurred during Google authentication",
         statusCode.internalServerError()
       )
     );
