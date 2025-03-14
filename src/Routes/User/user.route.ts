@@ -3,6 +3,7 @@ import {
   reviewValidationRules,
   saveLocationValidationRules,
   fundPoyntValidationRules,
+  addEngagementValidationRules,
 } from "../../Middlewares/User/user.middleware";
 
 import {
@@ -10,6 +11,8 @@ import {
   getReviews,
   getUser,
   fundPoynt,
+  addEngagement,
+  addTasksDone,
 } from "../../Controllers/User/user.controller";
 import validate from "../../Middlewares/reqValidation.middleware";
 import authenticate from "../../Middlewares/verifyToken.middleware";
@@ -24,6 +27,14 @@ router.patch(
   authenticate,
   fundPoynt
 );
+router.patch(
+  "/addEngagement",
+  addEngagementValidationRules(),
+  validate,
+  authenticate,
+  addEngagement
+);
+router.patch("/addTasksDone", validate, authenticate, addTasksDone);
 router.post(
   "/makeReview",
   reviewValidationRules(),

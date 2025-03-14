@@ -23,13 +23,18 @@ export const saveLocationValidationRules = () => {
 };
 export const fundPoyntValidationRules = () => {
   return [
-    body("driverId")
-      .trim()
-      .notEmpty()
-      .withMessage("Driver ID can not be empty"),
+    body("userId").trim().notEmpty().withMessage("User ID can not be empty"),
     body("poyntValue")
       .trim()
       .notEmpty()
       .withMessage("Poynt Value can not be empty"),
+  ];
+};
+export const addEngagementValidationRules = () => {
+  return [
+    body("campaignId")
+      .trim()
+      .notEmpty()
+      .withMessage("Campaign ID can not be empty"),
   ];
 };

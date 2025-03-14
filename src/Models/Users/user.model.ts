@@ -11,6 +11,8 @@ export interface IUser extends ILocation {
   savedLocations?: ILocation[];
   recentSearchs?: string[];
   poynts?: number;
+  tasksDone?: number;
+  adsEngaged?: string[];
   tier?: number;
   googleId?: string;
   OTP?: number | string;
@@ -46,6 +48,11 @@ const userSchema = new mongoose.Schema({
   poynts: {
     type: Number,
     default: 0.0,
+  },
+  adsEngaged: [String],
+  taskDone: {
+    type: Number,
+    default: 0,
   },
   tier: {
     type: Number,

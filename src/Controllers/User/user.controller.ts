@@ -39,7 +39,55 @@ export const fundPoynt = async (
     if (user) {
       return res.status(statusCode.created()).json({
         success: true,
-        message: "Payment successful",
+        message: "Poynt incremented successfully",
+        data: user,
+      });
+    }
+  } catch (err) {
+    return next(
+      new AppError(
+        `something went wrong ${err}`,
+        statusCode.internalServerError()
+      )
+    );
+  }
+};
+
+export const addEngagement = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = await userService.addEngagement(req, next);
+    if (user) {
+      return res.status(statusCode.created()).json({
+        success: true,
+        message: "Engagement Added successfully",
+        data: user,
+      });
+    }
+  } catch (err) {
+    return next(
+      new AppError(
+        `something went wrong ${err}`,
+        statusCode.internalServerError()
+      )
+    );
+  }
+};
+
+export const addTasksDone = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const user = await userService.addTasksDone(req, next);
+    if (user) {
+      return res.status(statusCode.created()).json({
+        success: true,
+        message: "Tasks Added successfully",
         data: user,
       });
     }

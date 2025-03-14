@@ -5,7 +5,7 @@ import UserRepository from "../../Repository/Users/user.repository";
 import { IReview } from "../../Models/Reviews/review.model";
 import Utilities, { statusCode } from "../../Utilities/utils";
 import { MalierService } from "../Email/mailer";
-import { IUser } from "../../Models/Users/user.model";
+import { IUser, User } from "../../Models/Users/user.model";
 
 const reviewRepository = new ReviewRepository();
 const userRepository = new UserRepository();
@@ -25,22 +25,58 @@ export default class UserService {
   }
 
   public async fundPoynt(req: any, next: NextFunction): Promise<IUser | void> {
-    const { driverId, poyntValue } = req.body;
-    const driversData = await userRepository.findUserById(driverId);
-    if (!driversData) {
+    const { userId, poyntValue } = req.body;
+    const usersData = await userRepository.findUserById(userId);
+    if (!usersData) {
       return next(
-        new AppError("Driver does not exist", statusCode.internalServerError())
+        new AppError("User does not exist", statusCode.internalServerError())
       );
     }
     const payload: Partial<IUser> = {
-      poynts: Number(driversData?.poynts) + Number(poyntValue),
+      poynts: Number(usersData?.poynts) + Number(poyntValue),
     };
-    const user = await userRepository.updateUserPoynts(driverId, payload);
+    const user = await userRepository.updateUserPoynts(userId, payload);
     if (!user) {
       return next(
-        new AppError("Unable to make payment", statusCode.internalServerError())
+        new AppError(
+          "Unable to make increase poynt",
+          statusCode.internalServerError()
+        )
       );
     }
+    return user;
+  }
+
+  public async addEngagement(req: any, next: NextFunction) {
+    const { campaignId } = req.body;
+    const { id } = req.user;
+    const user = await User.findById(id);
+    if (!user) {
+      return next(
+        new AppError("User does not exist", statusCode.internalServerError())
+      );
+    }
+    const updatedAdsEngaged = user.adsEngaged.includes(campaignId)
+      ? user.adsEngaged
+      : [...user.adsEngaged, campaignId];
+    user.adsEngaged = updatedAdsEngaged;
+    await user.save();
+
+    return user;
+  }
+
+  public async addTasksDone(req: any, next: NextFunction) {
+    const { id } = req.user;
+    const user = await User.findById(id);
+    if (!user) {
+      return next(
+        new AppError("User does not exist", statusCode.internalServerError())
+      );
+    }
+    const updatedTaskDone = Number(user.taskDone) + 3;
+    user.taskDone = updatedTaskDone;
+    await user.save();
+
     return user;
   }
 
