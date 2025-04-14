@@ -8,6 +8,7 @@ import hpp from "hpp";
 import express, { Application, Request, Response, NextFunction } from "express";
 import firebaseDB from "./firebase-config";
 import path from "path";
+import { swaggerSpec, swaggerUi } from "./swaggerConfig";
 
 import AppError from "./Utilities/Errors/appError";
 import { errorHandler } from "./Middlewares/Errors/errorMiddleware";
@@ -33,7 +34,7 @@ const LOCAL_URL = String(process.env.LOCAL_URL);
 const app: Application = express();
 
 // Port
-const PORT: number = Number(process.env.PORT) || 3000;
+const PORT: number = Number(process.env.PORT) || 5000;
 const address = `0.0.0.0:${PORT}`;
 
 // compression middleware
@@ -73,6 +74,9 @@ app.get("/", async (req: Request, res: Response) => {
 
 // Routes
 app.use("/api/v1", router);
+
+// Swagger Docs - Mount on separate endpoint
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(new AppError(`can't find ${req.originalUrl} on server!`, 404));
