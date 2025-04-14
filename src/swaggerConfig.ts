@@ -1,5 +1,6 @@
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUi from "swagger-ui-express";
+import path from "path";
 
 const serverUrl =
   process.env.NODE_ENV === "production"
@@ -14,13 +15,25 @@ const options: swaggerJSDoc.Options = {
       version: "1.0.0",
       description: "API documentation for POYNT server",
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
     servers: [
       {
         url: serverUrl,
       },
     ],
   },
-  apis: ["./Routes/**/*.ts", "./Controllers/**/*.ts", "./Models/**/*.ts"],
+  apis: [
+    path.join(__dirname, "./Routes/**/*.ts"),
+    path.join(__dirname, "./swagger/**/*.ts"),
+  ],
 };
 
 const swaggerSpec = swaggerJSDoc(options);

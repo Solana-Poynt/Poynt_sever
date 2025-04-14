@@ -29,6 +29,19 @@ export const signUpValidationRules = () => {
   ];
 };
 
+export const googleAuthValidationRules = () => {
+  return [
+    body("name").trim().notEmpty().withMessage("Name can not be empty"),
+    body("idToken").trim().notEmpty().withMessage("IdToken can not be empty"),
+    body("email").trim().isEmail().withMessage("please enter a valid Email"),
+    body("role")
+      .trim()
+      .optional()
+      .notEmpty()
+      .withMessage("role can not be empty"),
+  ];
+};
+
 export const otpValidationRules = () => {
   return [
     body("OTP")

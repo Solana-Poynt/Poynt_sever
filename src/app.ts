@@ -9,6 +9,8 @@ import express, { Application, Request, Response, NextFunction } from "express";
 import firebaseDB from "./firebase-config";
 import path from "path";
 import { swaggerSpec, swaggerUi } from "./swaggerConfig";
+import "./swagger/userSchemas";
+import "./swagger/authSchema";
 
 import AppError from "./Utilities/Errors/appError";
 import { errorHandler } from "./Middlewares/Errors/errorMiddleware";
