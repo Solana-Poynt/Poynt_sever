@@ -7,6 +7,8 @@ const serverUrl =
     ? "https://poynt-sever.onrender.com"
     : "http://localhost:5000";
 
+const fileExtension = process.env.NODE_ENV === "production" ? "js" : "ts";
+
 const options: swaggerJSDoc.Options = {
   definition: {
     openapi: "3.0.0",
@@ -31,8 +33,8 @@ const options: swaggerJSDoc.Options = {
     ],
   },
   apis: [
-    path.join(__dirname, "./Routes/**/*.ts"),
-    path.join(__dirname, "./swagger/**/*.ts"),
+    path.join(__dirname, `./Routes/**/*.${fileExtension}`),
+    path.join(__dirname, `./swagger/**/*.${fileExtension}`),
   ],
 };
 
