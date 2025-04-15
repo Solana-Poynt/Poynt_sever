@@ -12,6 +12,7 @@ import {
   fundPoynt,
   addEngagement,
   addTasksDone,
+  getLeaderBoard,
 } from "../../Controllers/User/user.controller";
 import validate from "../../Middlewares/reqValidation.middleware";
 import authenticate from "../../Middlewares/verifyToken.middleware";
@@ -27,7 +28,7 @@ const router = Router();
 
 /**
  * @swagger
- * /user:
+ * /api/v1/user:
  *   get:
  *     summary: Get current user info
  *     tags: [User]
@@ -41,7 +42,21 @@ router.get("/", validate, authenticate, getUser);
 
 /**
  * @swagger
- * /user/fundPoynt:
+ * /api/v1/user/leaderboard:
+ *   get:
+ *     summary: Get Leaderboard
+ *     tags: [User]
+ *     security:
+ *       - bearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved Leaderboard info
+ */
+router.get("/leaderboard", validate, authenticate, getLeaderBoard);
+
+/**
+ * @swagger
+ * /api/v1/user/fundPoynt:
  *   patch:
  *     summary: Fund Poynt account
  *     tags: [User]
@@ -67,7 +82,7 @@ router.patch(
 
 /**
  * @swagger
- * /user/addEngagement:
+ * /api/v1/user/addEngagement:
  *   patch:
  *     summary: Add user engagement
  *     tags: [User]
@@ -93,7 +108,7 @@ router.patch(
 
 /**
  * @swagger
- * /user/addTasksDone:
+ * /api/v1/user/addTasksDone:
  *   patch:
  *     summary: Record completed tasks
  *     tags: [User]
@@ -107,7 +122,7 @@ router.patch("/addTasksDone", validate, authenticate, addTasksDone);
 
 /**
  * @swagger
- * /user/makeReview:
+ * /api/v1/user/makeReview:
  *   post:
  *     summary: Submit a user review
  *     tags: [User]
@@ -133,7 +148,7 @@ router.post(
 
 /**
  * @swagger
- * /user/getReview:
+ * /api/v1/user/getReview:
  *   get:
  *     summary: Fetch user reviews
  *     tags: [User]

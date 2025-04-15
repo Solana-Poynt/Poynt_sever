@@ -12,6 +12,10 @@ const userRepository = new UserRepository();
 const util = new Utilities();
 const mail = new MalierService();
 
+type LeaderboardEntry =
+  | (Pick<IUser, "name" | "email" | "poynts"> & { position: number })
+  | { separator: string };
+
 export default class UserService {
   public async getUser(req: any, next: NextFunction): Promise<IReview | void> {
     const { id } = req.user;
@@ -113,5 +117,57 @@ export default class UserService {
       return next(new AppError("Unable to get review", statusCode.conflict()));
     }
     return review;
+  }
+
+  public async getLeaderboardWithUserRank(
+    req: any,
+    next: NextFunction
+  ): Promise<any | void> {
+    const { id } = req.user;
+    const userId = id;
+    // Fetch all users sorted by poynts descending
+    const allUsers = await User.find({})
+      .sort({ poynts: -1 })
+      .select("name email poynts") // Only fetch necessary fields
+      .lean();
+
+    // Get top 20 earners
+    const top20 = allUsers.slice(0, 20).map((user, index) => ({
+      ...user,
+      position: index + 1,
+    }));
+
+    // Get first 2 separately
+    const firstTwo = top20.slice(0, 2);
+
+    // Find current user and their position
+    const userIndex = allUsers.findIndex(
+      (user) => user._id.toString() === userId.toString()
+    );
+
+    const userInRank = userIndex !== -1;
+    const user = allUsers[userIndex];
+
+    const userEntry = userInRank
+      ? {
+          ...user,
+          position: userIndex + 1,
+        }
+      : null;
+
+    // Prepare final list
+    const leaderboard: LeaderboardEntry[] = [...firstTwo];
+
+    // Add users 3 to 20 (excluding duplicates)
+    for (let i = 2; i < top20.length; i++) {
+      leaderboard.push(top20[i]);
+    }
+
+    // If user is not in top 20, append their entry
+    if (userEntry && userEntry.position > 20) {
+      leaderboard.push({ separator: "..." }, userEntry);
+    }
+
+    return leaderboard;
   }
 }

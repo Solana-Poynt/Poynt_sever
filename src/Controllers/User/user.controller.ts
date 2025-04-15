@@ -29,6 +29,30 @@ export const getUser = async (
   }
 };
 
+export const getLeaderBoard = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const leaderBoard = await userService.getLeaderboardWithUserRank(req, next);
+    if (leaderBoard) {
+      return res.status(statusCode.created()).json({
+        success: true,
+        message: "successful",
+        data: leaderBoard,
+      });
+    }
+  } catch (err) {
+    return next(
+      new AppError(
+        `something went wrong ${err}`,
+        statusCode.internalServerError()
+      )
+    );
+  }
+};
+
 export const fundPoynt = async (
   req: Request,
   res: Response,

@@ -34,7 +34,7 @@ const router = Router();
 
 /**
  * @swagger
- * /auth/signUp:
+ * /api/v1/auth/signUp:
  *   post:
  *     summary: Register a new user
  *     tags: [Auth]
@@ -54,7 +54,7 @@ router.post("/signUp", signUpValidationRules(), validate, signUp);
 
 /**
  * @swagger
- * /auth/google:
+ * /api/v1/auth/google:
  *   post:
  *     summary: Google Auth
  *     tags: [Auth]
@@ -74,7 +74,7 @@ router.post("/google", googleAuthValidationRules(), validate, googleAuth);
 
 /**
  * @swagger
- * /auth/activateAccount:
+ * /api/v1/auth/activateAccount:
  *   post:
  *     summary: Activate user account using OTP
  *     tags: [Auth]
@@ -97,7 +97,7 @@ router.post(
 
 /**
  * @swagger
- * /auth/validateOTP:
+ * /api/v1/auth/validateOTP:
  *   post:
  *     summary: Validate OTP
  *     tags: [Auth]
@@ -115,7 +115,7 @@ router.post("/validateOTP", otpRules(), validate, validateOTP);
 
 /**
  * @swagger
- * /auth/resendOTP:
+ * /api/v1/auth/resendOTP:
  *   post:
  *     summary: Resend OTP to user's email
  *     tags: [Auth]
@@ -133,7 +133,7 @@ router.post("/resendOTP", emailValidationRules(), validate, resendOTP);
 
 /**
  * @swagger
- * /auth/login:
+ * /api/v1/auth/login:
  *   post:
  *     summary: Login user
  *     tags: [Auth]
@@ -153,7 +153,7 @@ router.post("/login", loginValidationRules(), validate, login);
 
 /**
  * @swagger
- * /auth/refreshToken:
+ * /api/v1/auth/refreshToken:
  *   get:
  *     summary: Refreshes the user authentication token
  *     tags: [Auth]
@@ -215,7 +215,7 @@ router.get(
 
 /**
  * @swagger
- * /auth/forgotPassword:
+ * /api/v1/auth/forgotPassword:
  *   post:
  *     summary: Trigger forgot password OTP
  *     tags: [Auth]
@@ -238,7 +238,7 @@ router.post(
 
 /**
  * @swagger
- * /auth/resetPassword:
+ * /api/v1/auth/resetPassword:
  *   post:
  *     summary: Reset password using OTP
  *     tags: [Auth]
