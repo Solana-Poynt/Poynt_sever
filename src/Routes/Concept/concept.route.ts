@@ -4,7 +4,10 @@ import {
   createConcept,
   deleteConcept,
   getConcepts,
-  getOneConcept,
+  getOneOrMultipleConcept,
+  getOneOrMultipleQuestions,
+  getOneOrMultipleTopics,
+  repairGlobalIds,
   updateConcept,
 } from "../../Controllers/Concepts/concept.controller";
 
@@ -19,7 +22,130 @@ const router = Router();
 
 /**
  * @swagger
- * /api/v1/concept:
+ * /api/v1/concept/multiple:
+ *   post:
+ *     summary: Get one or multiple concepts by IDs
+ *     tags: [Concept]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ids:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: [4, 5]
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved concept(s)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Concept'
+ *       404:
+ *         description: Concept(s) not found
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/multiple", validate, getOneOrMultipleConcept);
+
+/**
+ * @swagger
+ * /api/v1/concept/topic:
+ *   post:
+ *     summary: Get one or multiple topics by IDs
+ *     tags: [Concept]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ids:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: [4, 5]
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved concept(s)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Concept'
+ *       404:
+ *         description: Concept(s) not found
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/topic", validate, getOneOrMultipleTopics);
+
+/**
+ * @swagger
+ * /api/v1/concept/questions:
+ *   post:
+ *     summary: Get one or multiple questions by IDs
+ *     tags: [Concept]
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               ids:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *                 example: [4, 5]
+ *     responses:
+ *       200:
+ *         description: Successfully retrieved concept(s)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 success:
+ *                   type: boolean
+ *                 message:
+ *                   type: string
+ *                 data:
+ *                   type: array
+ *                   items:
+ *                     $ref: '#/components/schemas/Concept'
+ *       404:
+ *         description: Concept(s) not found
+ *       500:
+ *         description: Internal server error
+ */
+router.post("/questions", validate, getOneOrMultipleQuestions);
+
+/**
+ * @swagger
+ * /api/v1/concept/all:
  *   get:
  *     summary: Fetch all Concepts
  *     tags: [Concept]
@@ -27,34 +153,7 @@ const router = Router();
  *       200:
  *         description: Successfully retrieved concepts
  */
-router.get("/", validate, getConcepts);
-
-/**
- * @swagger
- * /api/v1/concept/{id}:
- *   get:
- *     summary: Get one concept by ID
- *     tags: [Concept]
- *     parameters:
- *       - in: path
- *         name: id
- *         required: true
- *         schema:
- *           type: string
- *         description: The concept ID
- *     responses:
- *       200:
- *         description: Successfully retrieved one concept
- *         content:
- *           application/json:
- *             schema:
- *               $ref: '#/components/schemas/Concept'
- *       404:
- *         description: Concept not found
- *       500:
- *         description: Internal server error
- */
-router.get("/:id", validate, getOneConcept);
+router.get("/all", validate, getConcepts);
 
 /**
  * @swagger
@@ -133,5 +232,19 @@ router.put("/:id", updateConcept);
  *         description: Server error
  */
 router.delete("/:id", deleteConcept);
+
+/**
+ * @swagger
+ * /api/v1/concept/repair:
+ *   get:
+ *     summary: Repair Global Ids
+ *     tags: [Concept]
+ *     responses:
+ *       200:
+ *         description: Ids repaired successfully
+ *       500:
+ *         description: Server error
+ */
+router.get("/repair", repairGlobalIds);
 
 export default router;

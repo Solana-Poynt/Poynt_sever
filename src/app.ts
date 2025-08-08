@@ -11,13 +11,15 @@ import path from "path";
 import { swaggerSpec, swaggerUi } from "./swaggerConfig";
 import "./swagger/userSchemas";
 import "./swagger/authSchema";
+import cron from "node-cron";
 
 import AppError from "./Utilities/Errors/appError";
 import { errorHandler } from "./Middlewares/Errors/errorMiddleware";
 import Utilities, { statusCode } from "./Utilities/utils";
-const util = new Utilities();
 import router from "./Routes/index";
+import axios from "axios";
 
+const util = new Utilities();
 dotenv.config();
 
 process.on("uncaughtException", (err) => {
@@ -82,6 +84,20 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 app.all("*", (req: Request, res: Response, next: NextFunction) => {
   next(new AppError(`can't find ${req.originalUrl} on server!`, 404));
+});
+
+// Schedule cron job to run every 13 minutes
+cron.schedule("*/13 * * * *", async () => {
+  try {
+    const url =
+      process.env.NODE_ENV === "developement"
+        ? `localhost:5000`
+        : `https://poynt-sever.onrender.com`;
+    const response = await axios.get(url);
+    console.log(`[${new Date().toISOString()}] Pinged self:`, response.status);
+  } catch (error: any) {
+    console.error("Error pinging self:", error.message);
+  }
 });
 
 app.use(errorHandler);

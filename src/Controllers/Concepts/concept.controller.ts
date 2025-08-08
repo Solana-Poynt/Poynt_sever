@@ -29,18 +29,66 @@ export const getConcepts = async (
   }
 };
 
-export const getOneConcept = async (
+export const getOneOrMultipleConcept = async (
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   try {
-    const concept = await conceptService.getOneConcept(req, next);
+    const concept = await conceptService.getOneOrMultipleConcept(req, next);
     if (concept) {
       return res.status(statusCode.created()).json({
         success: true,
         message: "successful",
         data: concept,
+      });
+    }
+  } catch (err) {
+    return next(
+      new AppError(
+        `something went wrong ${err}`,
+        statusCode.internalServerError()
+      )
+    );
+  }
+};
+
+export const getOneOrMultipleTopics = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const topics = await conceptService.getOneOrMultipleTopics(req, next);
+    if (topics) {
+      return res.status(statusCode.created()).json({
+        success: true,
+        message: "successful",
+        data: topics,
+      });
+    }
+  } catch (err) {
+    return next(
+      new AppError(
+        `something went wrong ${err}`,
+        statusCode.internalServerError()
+      )
+    );
+  }
+};
+
+export const getOneOrMultipleQuestions = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const questions = await conceptService.getOneOrMultipleQuestions(req, next);
+    if (questions) {
+      return res.status(statusCode.created()).json({
+        success: true,
+        message: "successful",
+        data: questions,
       });
     }
   } catch (err) {
@@ -113,6 +161,30 @@ export const deleteConcept = async (
         success: true,
         message: "successful",
         data: deletedConcept,
+      });
+    }
+  } catch (err) {
+    return next(
+      new AppError(
+        `something went wrong ${err}`,
+        statusCode.internalServerError()
+      )
+    );
+  }
+};
+
+export const repairGlobalIds = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  try {
+    const result = await conceptService.repairGlobalIds();
+    if (result) {
+      return res.status(statusCode.created()).json({
+        success: true,
+        message: "successful",
+        data: result,
       });
     }
   } catch (err) {
