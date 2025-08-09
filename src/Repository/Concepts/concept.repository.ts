@@ -22,21 +22,29 @@ export default class ConceptsRepository {
   }
 
   async findOneOrMultipleConceptByIds(ids: number[]): Promise<IConcept[]> {
-    return await Concept.find({ concept_id: { $in: ids } });
+    const concepts = await Concept.find({ concept_id: { $in: ids } });
+    // Reorder according to the ids array
+    const orderMap = new Map(ids.map((id, index) => [id, index]));
+    return concepts.sort(
+      (a, b) => orderMap.get(a.concept_id)! - orderMap.get(b.concept_id)!
+    );
   }
 
   async findOneOrMultipleTopicByIds(ids: number[]): Promise<ITopic[]> {
     const result = await Concept.aggregate([
-      { $unwind: "$topics" }, // break topics array into individual docs
-      { $match: { "topics.topic_id": { $in: ids } } }, // keep only those matching ids
-      { $replaceRoot: { newRoot: "$topics" } }, // make the topic itself the root document
+      { $unwind: "$topics" },
+      { $match: { "topics.topic_id": { $in: ids } } },
+      { $replaceRoot: { newRoot: "$topics" } },
     ]);
 
-    return result as ITopic[];
+    const orderMap = new Map(ids.map((id, index) => [id, index]));
+    return (result as ITopic[]).sort(
+      (a, b) => orderMap.get(a.topic_id)! - orderMap.get(b.topic_id)!
+    );
   }
 
   async findOnlyMatchingQuestions(ids: number[]): Promise<IQuestion[]> {
-    return await Concept.aggregate([
+    const result = await Concept.aggregate([
       { $unwind: "$topics" },
       { $unwind: "$topics.questions" },
       { $match: { "topics.questions.question_id": { $in: ids } } },
@@ -47,6 +55,12 @@ export default class ConceptsRepository {
         },
       },
     ]);
+
+    const questions = result.map((r) => r.question as IQuestion);
+    const orderMap = new Map(ids.map((id, index) => [id, index]));
+    return questions.sort(
+      (a, b) => orderMap.get(a.question_id)! - orderMap.get(b.question_id)!
+    );
   }
 
   async updateConcept(id: string, concept: IConcept): Promise<IConcept | null> {
