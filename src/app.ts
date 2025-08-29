@@ -6,7 +6,7 @@ import helmet from "helmet";
 import mongoSanitize from "express-mongo-sanitize";
 import hpp from "hpp";
 import express, { Application, Request, Response, NextFunction } from "express";
-import firebaseDB from "./firebase-config";
+// import firebaseDB from "./firebase-config";
 import path from "path";
 import { swaggerSpec, swaggerUi } from "./swaggerConfig";
 import "./swagger/userSchemas";
@@ -108,9 +108,9 @@ const server = app.listen(PORT, async () => {
     try {
       await connect(database);
       console.log(`Connection to database successful ${database}`);
-      firebaseDB
-        ? console.log(`Connection to FIREBASE DB successful`)
-        : console.log("Connection to FIREBASE DB failed");
+      // firebaseDB
+      //   ? console.log(`Connection to FIREBASE DB successful`)
+      //   : console.log("Connection to FIREBASE DB failed");
       console.log(`Server started on PORT https://localhost:${address}`);
     } catch (error) {
       console.log(`Trouble connecting to Database with error: ${error}`);
