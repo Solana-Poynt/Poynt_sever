@@ -92,7 +92,7 @@ cron.schedule("*/13 * * * *", async () => {
     const url =
       process.env.NODE_ENV === "developement"
         ? `localhost:5000`
-        : `https://poynt-sever.onrender.com`;
+        : `https://poynt-sever-al5n.onrender.com`;
     const response = await axios.get(url);
     console.log(`[${new Date().toISOString()}] Pinged self:`, response.status);
   } catch (error: any) {
